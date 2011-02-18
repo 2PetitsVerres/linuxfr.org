@@ -43,7 +43,7 @@ $PC_FOOT_WIDTH: 23%;
 $BOX_TRANSLATION: $PX_PAD_NODE + $RAY_CONTAINER;
 $BORDER_CONTENT: 1px;
 $BORDER_PHARE: 2px;
-$fleche_offset_vertical: -30px;
+$fleche_offset_vertical: 30px;
 
 /* un lien bleu/rouge visité normal */
 @mixin lien_standard {
@@ -132,6 +132,9 @@ body {
 	@if $IMAGE {
 		border-style: solid;
 		border-width: 0 11px 0 11px;
+		/* for old browsers */
+		border-color: $C_BAS_FOND;
+
 		-moz-border-image:    url("/images/contrib/RonRonnement/background_body.png") 0 11 0 11 stretch;
 		-o-border-image:      url("/images/contrib/RonRonnement/background_body.png") 0 11 0 11 stretch;
 		-webkit-border-image: url("/images/contrib/RonRonnement/background_body.png") 0 11 0 11 stretch;
@@ -478,7 +481,7 @@ input[type='submit'] {
 
 	/* comme le bord est plus grand, translation légèrement suppérieur */
 	.score, .datePourCss {
-		right: -$BOX_TRANSLATION - $BORDER_PHARE;
+		right: -$RAY_CONTAINER - $BORDER_PHARE;
 		width: $RAY_CONTAINER + $BORDER_PHARE;
 	}
 
@@ -544,6 +547,7 @@ body#admin-index #container > ul,
 }
 
 article {
+	position: relative;
 	header {
 		> h1:first-of-type > a:first-of-type:after {
 			content: " :";
@@ -564,9 +568,6 @@ article {
 	.meta {
 		color: $C_INTER;
 	}
-    .figures {
-        position: relative;
-    }
 	.score, .datePourCss {
 		display: block;
 		width: $RAY_CONTAINER + $BORDER_CONTENT;
@@ -579,7 +580,7 @@ article {
 		font-size: medium;
 		/* the translation should be the exact sum of padding and margin of all elements to the right */
         position: absolute;
-		right: -$BOX_TRANSLATION - $BORDER_CONTENT;
+		right: -$RAY_CONTAINER - $BORDER_CONTENT;
 	}
 	.score {
 		background: $C_BAS_FOND;
@@ -591,6 +592,7 @@ article {
 		line-height: 31px;
 		font-weight: bold;
 		margin-top: 2px;
+		top: $fleche_offset_vertical + 20px;
 	}
 	.datePourCss {
 		display: block !important;
@@ -602,10 +604,7 @@ article {
 		color: white;
 		padding: 0;
 		margin-bottom: 2px;
-        -moz-transform: translate(0px, $fleche_offset_vertical);
-        -webkit-transform: translate(0px, $fleche_offset_vertical);
-        -khtml-transform: translate(0px, $fleche_offset_vertical);
-        -o-transform: translate(0px, $fleche_offset_vertical);
+		top: 20px;
 
 		.jour {
 			padding-left: 8px;
@@ -1280,12 +1279,10 @@ div#form_links {
 	margin-right: auto;
 }
 
-body#news-show #redaction .score,
-body#news-show #redaction .datePourCss {
-	-moz-transform: translate(0px, 0px);
-	-webkit-transform: translate(0px, 0px);
-	-khtml-transform: translate(0px, 0px);
-	-o-transform: translate(0px, 0px);
+body#news-show #redaction {
+	.score, .datePourCss {right: 0px;}
+	.score {top: 31px;}
+	.datePourCss {top: 0px;}
 }
 #redaction #edition {
 	margin-top: 40px + 29px;
