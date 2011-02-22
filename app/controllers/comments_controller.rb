@@ -3,7 +3,6 @@ class CommentsController < ApplicationController
   before_filter :authenticate_account!, :except => [:index, :show]
   before_filter :find_node
   before_filter :find_comment, :except => [:index, :new, :answer, :create]
-  after_filter  :expire_cache, :only => [:create]
 
   def index
     @comments = @node.comments.published.all(:order => 'id DESC')
@@ -28,7 +27,7 @@ class CommentsController < ApplicationController
   def answer
     new
     @comment.parent_id = params[:id]
-    render :new
+    render :new if current_account.can_create?(@comment)
   end
 
   def create
@@ -36,6 +35,7 @@ class CommentsController < ApplicationController
     enforce_create_permission(@comment)
     @comment.attributes = params[:comment]
     @comment.user = current_account.user
+    @comment.default_score
     if !preview_mode && @comment.save
       flash[:notice] = "Votre commentaire a bien été posté"
       redirect_to_content @node.content
@@ -74,9 +74,5 @@ protected
 
   def find_comment
     @comment = @node.comments.find(params[:id])
-  end
-
-  def expire_cache
-    expire_page :controller => "trackers", :action => :comments, :format => :atom if @comment.content_type == "Tracker"
   end
 end

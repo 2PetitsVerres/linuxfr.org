@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110116221207) do
+ActiveRecord::Schema.define(:version => 20110221225411) do
 
   create_table "accounts", :force => true do |t|
     t.integer  "user_id"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(:version => 20110116221207) do
   add_index "accounts", ["confirmation_token"], :name => "index_accounts_on_confirmation_token", :unique => true
   add_index "accounts", ["email"], :name => "index_accounts_on_email", :unique => true
   add_index "accounts", ["login"], :name => "index_accounts_on_login"
+  add_index "accounts", ["remember_token"], :name => "index_accounts_on_remember_token"
   add_index "accounts", ["reset_password_token"], :name => "index_accounts_on_reset_password_token", :unique => true
   add_index "accounts", ["role"], :name => "index_accounts_on_role"
   add_index "accounts", ["user_id"], :name => "index_accounts_on_user_id"
@@ -60,7 +61,7 @@ ActiveRecord::Schema.define(:version => 20110116221207) do
     t.integer  "node_id"
     t.integer  "user_id"
     t.string   "state",             :limit => 10,   :default => "published", :null => false
-    t.string   "title",             :limit => 32,                            :null => false
+    t.string   "title",             :limit => 100,                           :null => false
     t.integer  "score",                             :default => 0,           :null => false
     t.boolean  "answered_to_self",                  :default => false,       :null => false
     t.string   "materialized_path", :limit => 1022
@@ -77,8 +78,8 @@ ActiveRecord::Schema.define(:version => 20110116221207) do
   add_index "comments", ["user_id", "state", "created_at"], :name => "index_comments_on_user_id_and_state_and_created_at"
 
   create_table "diaries", :force => true do |t|
-    t.string   "title",          :limit => 64, :null => false
-    t.string   "cached_slug",    :limit => 64
+    t.string   "title",          :limit => 100, :null => false
+    t.string   "cached_slug",    :limit => 105
     t.integer  "owner_id"
     t.text     "body"
     t.text     "wiki_body"
@@ -122,15 +123,15 @@ ActiveRecord::Schema.define(:version => 20110116221207) do
   add_index "links", ["news_id"], :name => "index_links_on_news_id"
 
   create_table "news", :force => true do |t|
-    t.string   "state",        :limit => 10,         :default => "draft", :null => false
-    t.string   "title",        :limit => 64,                              :null => false
-    t.string   "cached_slug",  :limit => 64
+    t.string   "state",        :limit => 10,       :default => "draft", :null => false
+    t.string   "title",        :limit => 100,                           :null => false
+    t.string   "cached_slug",  :limit => 105
     t.integer  "moderator_id"
     t.integer  "section_id"
-    t.string   "author_name",  :limit => 32,                              :null => false
-    t.string   "author_email", :limit => 64,                              :null => false
+    t.string   "author_name",  :limit => 32,                            :null => false
+    t.string   "author_email", :limit => 64,                            :null => false
     t.text     "body"
-    t.text     "second_part",  :limit => 2147483647
+    t.text     "second_part",  :limit => 16777215
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -206,8 +207,8 @@ ActiveRecord::Schema.define(:version => 20110116221207) do
 
   create_table "posts", :force => true do |t|
     t.integer  "forum_id"
-    t.string   "title",          :limit => 64, :null => false
-    t.string   "cached_slug",    :limit => 64
+    t.string   "title",          :limit => 100, :null => false
+    t.string   "cached_slug",    :limit => 105
     t.text     "body"
     t.text     "wiki_body"
     t.text     "truncated_body"
@@ -266,9 +267,9 @@ ActiveRecord::Schema.define(:version => 20110116221207) do
   add_index "tags", ["taggings_count"], :name => "index_tags_on_taggings_count"
 
   create_table "trackers", :force => true do |t|
-    t.string   "state",               :limit => 10, :default => "opened", :null => false
-    t.string   "title",               :limit => 64,                       :null => false
-    t.string   "cached_slug",         :limit => 64
+    t.string   "state",               :limit => 10,  :default => "opened", :null => false
+    t.string   "title",               :limit => 100,                       :null => false
+    t.string   "cached_slug",         :limit => 105
     t.integer  "category_id"
     t.integer  "assigned_to_user_id"
     t.text     "body"
@@ -297,8 +298,8 @@ ActiveRecord::Schema.define(:version => 20110116221207) do
   add_index "users", ["cached_slug"], :name => "index_users_on_cached_slug"
 
   create_table "wiki_pages", :force => true do |t|
-    t.string   "title",       :limit => 64, :null => false
-    t.string   "cached_slug", :limit => 64
+    t.string   "title",       :limit => 100, :null => false
+    t.string   "cached_slug", :limit => 105
     t.text     "body"
     t.datetime "created_at"
     t.datetime "updated_at"
